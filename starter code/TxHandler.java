@@ -46,7 +46,7 @@ public class TxHandler {
 			Transaction.Output output = thisUTXOPool.getTxOutput(utxo);
 			// output.address -> public key
 			// tx.getRawDataToSign(index) -> message
-			if(!thisRSAKey.verifySignature(output.address, tx.getRawDataToSign(i))) {
+			if(!thisRSAKey.verifySignature(tx.getRawDataToSign(i), input.signature)) {
 				return false;
 			}
 
