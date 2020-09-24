@@ -8,6 +8,7 @@ public class TxHandler {
 	 */
 	//this currenct utxoPool
 	private UTXOPool thisUTXOPool;
+	private RSAKey thisRSAKey;
 
 	public TxHandler(UTXOPool utxoPool) {
 		// IMPLEMENT THIS
@@ -45,7 +46,7 @@ public class TxHandler {
 			Transaction.Output output = thisUTXOPool.getTxOutput(utxo);
 			// output.address -> public key
 			// tx.getRawDataToSign(index) -> message
-			if(!RSAKey.verifySignature(output.address, tx.getRawDataToSign(i))) {
+			if(!thisRSAKey.verifySignature(tx.getRawDataToSign(i), thisRSAKey.sign(tx.getRawDataToSign(i)))) {
 				return false;
 			}
 
