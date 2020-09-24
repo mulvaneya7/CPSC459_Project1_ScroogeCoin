@@ -66,7 +66,7 @@ public class TxHandler {
 
 		//(4) all of tx's output values are non-negative
 		for(int i = 0; i < tx.numOutputs(); i++) {
-			if(tx.getOutput(i) < 0.0) {
+			if(tx.getOutput(i).value < 0) {
 				return false;
 			}
 			//(5) collecting more data to verify (5)
