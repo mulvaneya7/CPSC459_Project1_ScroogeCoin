@@ -44,9 +44,13 @@ public class TxHandler {
 
 			//(2) the signatures on each input of tx are valid
 			Transaction.Output output = thisUTXOPool.getTxOutput(utxo);
-			// output.address -> public key
+
+			//	Give the RSA key the publicKey
+			thisRSAKey = output.address;
+
 			// tx.getRawDataToSign(index) -> message
-			if(!thisRSAKey.verifySignature(tx.getRawDataToSign(i), thisRSAKey.sign(tx.getRawDataToSign(i)))) {
+			// input.signature -> signature from corresponding transaction input
+			if(!thisRSAKey.verifySignature(tx.getRawDataToSign(i), input.signature)) {
 				return false;
 			}
 
@@ -55,7 +59,7 @@ public class TxHandler {
 				return false;
 				
 			} else {
-				txInputs.add(utxo)
+				txInputs.add(utxo);
 			}
 
 			//(5) the sum of tx's input values is greater than or equal to the sum of its output values, false otherwise
