@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class TxHandler {
 
@@ -92,8 +93,30 @@ public class TxHandler {
 	 * and updating the current UTXO pool as appropriate.
 	 */
 	public Transaction[] handleTxs(Transaction[] possibleTxs) {
-		// IMPLEMENT THIS
-		return null;
+		List<Transaction> acceptedTx = new ArrayList<Transaction>();
+		for (int i = 0; i < possibleTxs.length; i++) {
+			Transaction tx = possibleTxs[i];
+			if (isValidTx(tx)) {
+				acceptedTx.add(tx);
+
+				List<Transaction.Output> outputs = tx.getOutputs();
+				for (int j = 0; j < outputs.size(); j++) {
+					Transaction.Output output = outputs.get(j);
+					UTXO utxo = new UTXO(tx.getHash(), j);
+					thisUTXOPool.addUTXO(utxo, output);
+				}
+
+				List<Transaction.Input> inputs = tx.getInputs();
+				for (int j = 0; j < inputs.size(); j++) {
+					Transaction.Input input = inputs.get(j);
+					UTXO utxo = new UTXO(input.prevTxHash, input.outputIndex);
+					thisUTXOPool.removeUTXO(utxo);
+				}
+			}
+		}
+		Transaction[] result = new Transaction[acceptedTx.size()];
+		acceptedTx.toArray(result);
+		return result;
 	}
 
 } 
